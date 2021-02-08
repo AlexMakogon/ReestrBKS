@@ -1,0 +1,125 @@
+﻿@{
+    ViewData["Title"] = "Личевой счет";
+}
+
+<style>
+    label {
+        color: grey;
+    }
+
+    .table thead {
+        background-color: rgba(0, 0, 0, 0.05);
+        font-weight: 700;
+    }
+
+    .table thead td {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .table tr {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+</style>
+<div class="row">
+    <div class="col-lg-3">
+        <table class="table table-sm">
+            <thead class="hovered-tr">
+                <tr onclick="goToReestr()">
+                    <td align="center">ГОРЯЧАЯ ВОДА</td>
+                </tr>
+            </thead>
+        </table>
+        <div class="card">
+            <div class="card-body">
+                <label>период с</label>
+                <div class="input-group date">
+                    <input id="periodStart" type="text" class="form-control search-control">
+                    <span class="input-group-addon"><i class="form-control far fa-calendar-alt"></i></span>
+                </div>
+
+                <label>по</label>
+                <div class="input-group date">
+                    <input id="periodFinish" type="text" class="form-control search-control">
+                    <span class="input-group-addon"><i class="form-control far fa-calendar-alt"></i></span>
+                </div>
+
+                <br />
+                <div class="input-group">
+                    <input type="button" class="btn btn-info form-control" value="Найти" onclick="LoadAbstractValues()" />
+                    <input type="button" class="btn btn-secondary form-control" value="Очистить" onclick="ClearButtonClick()" />
+                </div>
+
+                <br />
+                <div>
+                    <button type="button" class="btn btn-info form-control" onclick="GetReport('General')">
+                        <div class="row">
+                            <div class="col-md-10">Общий расчет</div>
+                            <div class="col-md-2 text-right"><i class="far fa-file-excel"></i></div>
+                        </div>
+                    </button>
+                </div>
+
+
+                <br />
+                <div>
+                    <button type="button" class="btn btn-info form-control" onclick="GetReport('Details')">
+                        <div class="row">
+                            <div class="col-md-10">Расчет по услугам</div>
+                            <div class="col-md-2 text-right"><i class="far fa-file-excel"></i></div>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-9">
+        <div class="row">
+            <div class="col-md-2" style="max-width:150px">Лицевой счет: </div>
+            <div class="col-md-10"><b id="accountNumber"></b></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2 " style="max-width:150px">Адрес: </div>
+            <div class="col-md-10"><b id="address"></b></div>
+        </div>
+        <div class="row">
+            <div class="col-md-2" style="max-width:150px">Наниматель: </div>
+            <div class="col-md-10"><b id="person"></b></div>
+        </div>
+        <br />
+        <div class="table-responsive">
+            <table class="table table-striped table-bordered table-sm" id="abstractLines">
+                <thead>
+                    <tr>
+                        <th>Год</th>
+                        <th>Месяц</th>
+                        <th>Вид суммы</th>
+                        <th>Сальдо вх</th>
+                        <th>Сальдо вх дебет</th>
+                        <th>Сальдо вх кредит</th>
+                        <th>Отопление</th>
+                        <th>ГВС</th>
+                        <th>ГВС т\\э</th>
+                        <th>ГВС (ОДН) т\\э</th>
+                        <th>ГВС (ОДН) т\\н</th>
+                        <th>Надбавка ГВС т/н</th>
+                        <th>ХВС на ГВС т/э</th>
+                        <th>Итого</th>
+                        <th>Пени</th>
+                        <th>Сальдо исх</th>
+                        <th>Сальдо исх дебет</th>
+                        <th>Сальдо исх кредит</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+@section Scripts {
+    <script src="~/lib/bootstrap-datepicker/js/bootstrap-datepicker.js"></script>
+    <script src="~/lib/bootstrap-datepicker/locales/bootstrap-datepicker.ru.min.js"></script>
+    <script src="~/js/hotWaterInfo.js"></script>
+}
+

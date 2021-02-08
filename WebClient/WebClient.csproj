@@ -1,0 +1,37 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <RootNamespace>ReestrBKS.WebClient</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Remove="Temp\**" />
+    <Content Remove="Temp\**" />
+    <EmbeddedResource Remove="Temp\**" />
+    <None Remove="Temp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Remove="log.txt" />
+    <None Remove="ReestrBKS.db" />
+    <None Remove="Templates\DetailsReport.xlsx" />
+    <None Remove="Templates\GeneralReport.xlsx" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="3.1.5" />
+    <PackageReference Include="Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation" Version="3.1.5" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\BusinessLogic\BusinessLogic.csproj" />
+    <ProjectReference Include="..\DataAccess\DataAccess.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Views\Subject\" />
+    <Folder Include="Views\Home\" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,207 @@
+﻿@model string
+
+<div class="modal" id="ImportForm" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header" style="padding-left: 0; padding-right: 0; padding-bottom: 0;">
+                <div class="col-md-12">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <div class="modal-title">
+                        <ul class="nav nav-tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#oneFile">Импорт 1 файла</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" data-toggle="tab" href="#massFile">Массовый импорт</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="tab-content">
+                    <div class="tab-pane fade show active" id="oneFile">
+                        <div class="row">
+                            <div class="col-md-2"><label>Год</label></div>
+                            <div class="col-md-3"><input class="form-control" id="importFormYear" /></div>
+                            <div class="col-md-2"><label>Месяц</label></div>
+                            <div class="col-md-5">
+                                <select class="form-control" id="importFormMonth">
+                                    <option value="0"></option>
+                                    <option value="1">Январь</option>
+                                    <option value="2">Февраль</option>
+                                    <option value="3">Март</option>
+                                    <option value="4">Апрель</option>
+                                    <option value="5">Май</option>
+                                    <option value="6">Июнь</option>
+                                    <option value="7">Июль</option>
+                                    <option value="8">Август</option>
+                                    <option value="9">Сентябрь</option>
+                                    <option value="10">Октябрь</option>
+                                    <option value="11">Ноябрь</option>
+                                    <option value="12">Декабрь</option>
+                                </select>
+                            </div>
+                        </div>
+                        <br />
+                        <div class="row">
+                            <div class="col-md-2"><label>Файл</label></div>
+                            <div class="col-md-10">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="importFormFileName" readonly>
+                                    <input type="file" id="importFormFile" onchange="ImportFileChange()" hidden />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-info" type="button" onclick="SelectFile()">Обзор</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="tab-pane fade" id="massFile">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" id="importFormFilesName" value="Выберите файлы для импорта" readonly>
+                                    <input type="file" id="importFormFiles" onchange="ImportFilesChange()" hidden multiple />
+                                    <div class="input-group-append">
+                                        <button class="btn btn-info" type="button" onclick="SelectFiles()">Обзор</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <table id="files" class="table">
+                                    <thead></thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-info" onclick="Import()">Импорт</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    function ShowImportForm() {
+        $("#importFormMonth").val(0);
+        $("#importFormFile").val("");
+        $("#importFormFileName").val("");
+        $("#ImportForm").modal();
+    }
+
+    function SelectFile() {
+        $("#importFormFile").trigger("click");
+    }
+
+    function SelectFiles() {
+        $("#importFormFiles").trigger("click");
+    }
+
+    function ImportFileChange() {
+        var fileName = $("#importFormFile").prop("files")[0];
+        $("#importFormFileName").val($("#importFormFile").val());
+    }
+
+    function ImportFilesChange() {
+        var table = $('#files');
+        table.html('<thead></thead><tbody></tbody>');
+
+        var head = $('#files thead');
+        var body = $('#files tbody');
+        head.append('<tr><th width="50%">Файл</th><th width="50%">Статус</th></tr>');
+
+        var files = $("#importFormFiles").prop("files");
+        for (var i = 0; i < files.length; i++) {
+            body.append('<tr><td>' + files[i].name + '</td><td>В очереди</td></tr>');
+        }
+    }
+
+    function Import() {
+        var oneFile = $('#massFile').hasClass('active');
+        if (oneFile) {
+            importMass(0);
+        }
+        else {
+            importOne();
+        }
+    }
+
+    function importOne() {
+        $("#ImportForm").modal('hide');
+        var year = $("#importFormYear").val();
+        var month = $("#importFormMonth").val();
+        var file = $("#importFormFile").prop("files")[0];
+
+        var data = new FormData;
+        data.append("year", year);
+        data.append("month", month);
+        data.append("file", file);
+
+        ShowLoader();
+        $.ajax({
+            url: "/@Model/ImportReestr",
+            data: data,
+            type: "POST",
+            async: true,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: "text",
+            success: function (data) {
+                alert("Импорт завершен");
+            },
+            error: function (jqXHR, textStatus, errorThrown) {
+                alert("Ошибка, не удалось импортировать файл." + jqXHR.responseText);
+            },
+            complete: function (data) {
+                HideLoader();
+            }
+        });
+    }
+
+    function importMass(fileIdx) {
+        ShowLoader();
+        var files = $("#importFormFiles").prop("files");
+        var data = new FormData;
+        data.append("file", $("#importFormFiles").prop("files")[fileIdx]);
+        var rows = $("#files tbody tr");
+        $($(rows[fileIdx]).find('td')[1]).html('Импорт');
+
+        $.ajax({
+            url: "/@Model/ImportReestr2",
+            data: data,
+            type: "POST",
+            async: true,
+            cache: false,
+            processData: false,
+            contentType: false,
+            dataType: "text",
+            success: function (data) {
+                $($(rows[fileIdx]).find('td')[1]).html('OK');
+            },
+            error: function (data) {
+                $($(rows[fileIdx]).find('td')[1]).html('Ошибка');
+            },
+            complete: function (data) {
+                HideLoader();
+                if (fileIdx < files.length - 1) {
+                    importMass(fileIdx + 1);
+                }
+                else {
+                    alert("Импорт завершен");
+                }
+            }
+        });
+    }
+
+</script>
+

@@ -1,0 +1,106 @@
+﻿@{
+    ViewData["Title"] = "Home Page";
+}
+
+<style>
+    label {
+        color: grey;
+    }
+
+    .page-item a {
+        cursor: pointer;
+    }
+
+    .page-item.active a {
+        background-color: rgb(23, 162, 184) !important;
+        border-color: rgb(23, 162, 184) !important;
+    }
+
+    .page-item.active a:hover {
+        cursor: default;
+        color: white;
+    }
+
+    .table thead {
+        background-color: rgba(0, 0, 0, 0.05);
+        font-weight: 700;
+    }
+
+    .table thead td {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+    }
+
+    .table tr {
+        background-color: rgba(0, 0, 0, 0.05);
+    }
+</style>
+
+<div class="row">
+    <div class="col-lg-3">
+        <table class="table table-sm">
+            <thead>
+                <tr>
+                    <td align="center">ГОРЯЧАЯ ВОДА</td>
+                </tr>
+            </thead>
+        </table>
+        <div class="card">
+            <div class="card-body">
+                <label>улица</label>
+                <input id="street" class="form-control search-control" />
+
+                <label for="house">дом</label>
+                <label for="apartment">кв.</label>
+                <label for="room">ком.</label>
+                <div class="input-group">
+                    <input id="house" type="text" class="form-control search-control" />
+                    <input id="apartment" type="text" class="form-control search-control" />
+                    <input id="room" type="text" class="form-control search-control" />
+                </div>
+
+                <label>лицевой счет</label>
+                <input id="accountNumber" class="form-control search-control" />
+
+                <label>наниматель</label>
+                <input id="person" class="form-control search-control" />
+
+                <br />
+                <div class="input-group">
+                    <input type="button" class="btn btn-info form-control" value="Найти" onclick="LoadAbstractLines(1)" />
+                    <input type="button" class="btn btn-secondary form-control" value="Очистить" onclick="ClearButtonClick()" />
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="col-lg-9">
+
+        <table class="table table-sm" id="abstractLines">
+            <thead>
+                <tr>
+                    <td>№ лиц счета</td>
+                    <td>Наниматель</td>
+                    <td>Адрес</td>
+                </tr>
+            </thead>
+            <tbody class="hovered-tr"></tbody>
+        </table>
+        <nav>
+            <ul class="pagination" id="pagination">
+            </ul>
+        </nav>
+        <div id="emptyFilter" class="text-center" style="font-size:26px; display:none">
+            Заполните параметры поиска
+        </div>
+    </div>
+</div>
+
+@section ImportForm {
+    <partial name="_ImportForm.cshtml" model='"HotWater"' />
+}
+
+@section Scripts {
+    <script src="~/js/hotWaterIndex.js"></script>
+}
+

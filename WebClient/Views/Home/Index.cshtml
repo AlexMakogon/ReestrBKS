@@ -1,0 +1,73 @@
+﻿@{
+    ViewData["Title"] = "Реестр БКС";
+}
+
+<style>
+    .center {
+        width: 600px;
+        height: 300px;
+        margin: 0 auto;
+        margin-top: 20%
+    }
+
+    #hotWaterButton:hover {
+        background-color: rgba(255, 0, 0, 0.32);
+        cursor: pointer;
+    }
+
+    #coldWaterButton:hover {
+        background-color: rgba(0, 72, 255, 0.16);
+        cursor: pointer;
+    }
+
+    #commonHouseButton:hover {
+        background-color: rgba(255, 193, 7, 0.32);
+        cursor: pointer;
+    }
+</style>
+
+<div style="text-align: center;">
+    <div class="center">
+        <div id="hotWaterButton" class="row" style="margin-bottom: 15px;">
+            <div style="width: 100%; background-color: rgba(255, 0, 0, 0.16);">
+                <span style="font-size:25px; font-weight:600">
+                    ГОРЯЧАЯ ВОДА
+                </span>
+            </div>
+
+        </div>
+        <div id="coldWaterButton" class="row" style="margin-bottom: 15px;">
+            <div style="width: 100%; background-color: rgba(0, 72, 255, 0.16);">
+                <span style="font-size:25px; font-weight:600">
+                    ХОЛОДНАЯ ВОДА
+                </span>
+            </div>
+        </div>
+        <div id="commonHouseButton" class="row" style="margin-bottom: 15px;">
+            <div style="width: 100%; background-color: rgba(255, 193, 7, 0.16);">
+                <span style="font-size: 25px; font-weight: 600">
+                    ОБЩЕДОМОВЫЕ ПРИБОРЫ
+                </span>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+
+    <script>
+        $(document).ready(function () {
+            $('#hotWaterButton').on('click', function () {
+                location.href = "../HotWater/Index";
+            });
+
+            $('#coldWaterButton').on('click', function () {
+                location.href = "../ColdWater/Index";
+            });
+
+            $('#commonHouseButton').on('click', function () {
+                location.href = "../CommonHouse/Index";
+            });
+        });
+    </script>
+}
