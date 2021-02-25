@@ -11,6 +11,7 @@ namespace ReestrBKS.DataAccess
     {
         public DbSet<HotWaterLine> HotWaterLines { get; set; }
         public DbSet<CommonHouseLine> CommonHouseLines { get; set; }
+        public DbSet<ColdWaterLine> ColdWaterLines { get; set; }
         public DbSet<AmountType> AmountTypes { get; set; }
         public DbSet<Person> People { get; set; }
         public DbSet<Street> Streets { get; set; }

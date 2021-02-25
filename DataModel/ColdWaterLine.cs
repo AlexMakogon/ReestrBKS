@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.Text;
 
 namespace ReestrBKS.DataModel
 {
-    public class HotWaterLine : IAbstractLine
-    { 
+    public class ColdWaterLine : IAbstractLine
+    {
         public int Id { get; set; }
         public int Year { get; set; }
         public int Month { get; set; }
@@ -22,13 +20,19 @@ namespace ReestrBKS.DataModel
         public double IncBalance { get; set; } // Сальдо вх
         public double IncBalanceDebit { get; set; } // Сальдо вх дебет
         public double IncBalanceCredit { get; set; } // Сальдо вх кредит
-        public double Heating { get; set; } // Отопление
+        public double ColdWater { get; set; } // ХВС
+        public double WaterDisposal { get; set; } // Водоотведение
+        public double ColdWaterCommon { get; set; } // ХВС(ОДН)
+        public double ColdWaterIncrease { get; set; } // Надбавка ХВС
+        public double ColdWaterHotIncrease { get; set; } // Надбавка ХВС на ГВС
+        public double ColdWaterHot { get; set; } // ХВС на ГВС
+        public double ColdWaterHotCommon { get; set; } // ХВС на ГВС (ОДН)
+        public double WaterDisposalCommon { get; set; } // Водоотведение (ОДН)
+        public double ColdWaterHotIncCoeff { get; set; } // Пов-й к-т нв ХВСнаГВС 10
+        public double ColdWaterIncCoeff { get; set; } // Пов-щий коэф нв ХВС 10
         public double HotWater { get; set; } // ГВС
-        public double HotWaterTE { get; set; } // ГВС т\\э
-        public double HotWaterCommonTE { get; set; } // ГВС (ОДН) т\\э
-        public double HotWaterCommonTN { get; set; } // ГВС (ОДН) т\\н
-        public double HotWaterIncreaseTN { get; set; } // Надбавка ГВС т/н
-        public double ColdWater { get; set; } // ХВС на ГВС т/э
+        public double SummerWatering { get; set; } // Летний полив
+        public double Heating { get; set; } // Отопление
         public double Total { get; set; } // Итого
         public double Penalty { get; set; } // Пени
         public double OutBalance { get; set; } // Сальдо исх
