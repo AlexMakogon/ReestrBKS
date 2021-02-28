@@ -147,7 +147,7 @@ namespace ReestrBKS.WebClient.Controllers
             else
                 fileName = reporter.GetDetailsReport(lines, subject, person, GetStartDate(lines), GetFinishDate(lines));
             Stream fs = new FileStream(fileName, FileMode.Open);
-            return File(fs, "application/xlsx", string.Format("Расчет {0} {1}.xlsx", lines.First().AccountNumber, person?.Name));
+            return File(fs, "application/xlsx", string.Format("Расчет {0} {1}.xlsx", subject.GetAddress(), person?.Name));
         }
 
         private DateTime GetStartDate(List<T> lines)

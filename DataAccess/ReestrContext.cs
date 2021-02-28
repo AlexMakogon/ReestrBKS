@@ -23,6 +23,108 @@ namespace ReestrBKS.DataAccess
         {
             Database.SetCommandTimeout(6000);
             Database.EnsureCreated();
+
+            if (this.Database.IsSqlite())
+            {
+                this.Database.ExecuteSqlRaw(@"
+                    CREATE TABLE IF NOT EXISTS ""ColdWaterLines"" (
+	                ""Id""	INTEGER NOT NULL,
+	                ""Year""	INTEGER NOT NULL,
+	                ""Month""	INTEGER NOT NULL,
+	                ""AccountNumber""	TEXT,
+	                ""PersonId""	INTEGER,
+	                ""SubjectId""	INTEGER NOT NULL,
+	                ""AmountTypeId""	INTEGER,
+	                ""IncBalance""	REAL NOT NULL,
+	                ""IncBalanceDebit""	REAL NOT NULL,
+	                ""IncBalanceCredit""	REAL NOT NULL,
+	                ""ColdWater""	REAL NOT NULL,
+	                ""WaterDisposal""	REAL NOT NULL,
+	                ""ColdWaterCommon""	REAL NOT NULL,
+	                ""ColdWaterIncrease""	REAL NOT NULL,
+	                ""ColdWaterHotIncrease""	REAL NOT NULL,
+	                ""ColdWaterHot""	REAL NOT NULL,
+	                ""ColdWaterHotCommon""	REAL NOT NULL,
+	                ""WaterDisposalCommon""	REAL NOT NULL,
+	                ""ColdWaterHotIncCoeff""	REAL NOT NULL,
+	                ""ColdWaterIncCoeff""	REAL NOT NULL,
+	                ""HotWater""	REAL NOT NULL,
+	                ""SummerWatering""	REAL NOT NULL,
+	                ""Heating""	REAL NOT NULL,
+	                ""Total""	REAL NOT NULL,
+	                ""Penalty""	REAL NOT NULL,
+	                ""OutBalance""	REAL NOT NULL,
+	                ""OutBalanceDebit""	REAL NOT NULL,
+	                ""OutBalanceCredit""	REAL NOT NULL,
+	                CONSTRAINT ""PK_ColdWaterLines"" PRIMARY KEY(""Id"" AUTOINCREMENT),
+	                CONSTRAINT ""FK_ColdWaterLines_Subjects_SubjectId"" FOREIGN KEY(""SubjectId"") REFERENCES ""Subjects""(""Id"") ON DELETE CASCADE,
+	                CONSTRAINT ""FK_ColdWaterLines_AmountTypes_AmountTypeId"" FOREIGN KEY(""AmountTypeId"") REFERENCES ""AmountTypes""(""Id"") ON DELETE RESTRICT,
+	                CONSTRAINT ""FK_ColdWaterLines_People_PersonId"" FOREIGN KEY(""PersonId"") REFERENCES ""People""(""Id"") ON DELETE RESTRICT);"
+                );
+            }
+
+            if (this.Database.IsSqlServer())
+            {
+                this.Database.ExecuteSqlRaw(@"
+                    IF not exists (select 1 from information_schema.tables where table_name = 'ColdWaterLines')
+                    BEGIN
+                      CREATE TABLE dbo.ColdWaterLines (
+                        Id int IDENTITY,
+                        Year int NOT NULL,
+                        Month int NOT NULL,
+                        AccountNumber nvarchar(max) NULL,
+                        PersonId int NULL,
+                        SubjectId int NOT NULL,
+                        AmountTypeId int NULL,
+                        IncBalance float NOT NULL,
+                        IncBalanceDebit float NOT NULL,
+                        IncBalanceCredit float NOT NULL,
+                        ColdWater float NOT NULL,
+                        WaterDisposal float NOT NULL,
+                        ColdWaterCommon float NOT NULL,
+                        ColdWaterIncrease float NOT NULL,
+                        ColdWaterHotIncrease float NOT NULL,
+                        ColdWaterHot float NOT NULL,
+                        ColdWaterHotCommon float NOT NULL,
+                        WaterDisposalCommon float NOT NULL,
+                        ColdWaterHotIncCoeff float NOT NULL,
+                        ColdWaterIncCoeff float NOT NULL,
+                        HotWater float NOT NULL,
+                        SummerWatering float NOT NULL,
+                        Heating float NOT NULL,
+                        Total float NOT NULL,
+                        Penalty float NOT NULL,
+                        OutBalance float NOT NULL,
+                        OutBalanceDebit float NOT NULL,
+                        OutBalanceCredit float NOT NULL,
+                        CONSTRAINT PK_ColdWaterLines PRIMARY KEY CLUSTERED (Id)
+                      )
+                      ON [PRIMARY]
+                      TEXTIMAGE_ON [PRIMARY]
+  
+                      CREATE INDEX IX_ColdWaterLines_AmountTypeId
+                        ON ReestrBks.dbo.ColdWaterLines (AmountTypeId)
+                        ON [PRIMARY]
+  
+                      CREATE INDEX IX_ColdWaterLines_PersonId
+                        ON ReestrBks.dbo.ColdWaterLines (PersonId)
+                        ON [PRIMARY]
+  
+                      CREATE INDEX IX_ColdWaterLines_SubjectId
+                        ON ReestrBks.dbo.ColdWaterLines (SubjectId)
+                        ON [PRIMARY]
+  
+                      ALTER TABLE ReestrBks.dbo.ColdWaterLines
+                        ADD CONSTRAINT FK_ColdWaterLines_AmountTypes_AmountTypeId FOREIGN KEY (AmountTypeId) REFERENCES dbo.AmountTypes (Id)
+  
+                      ALTER TABLE ReestrBks.dbo.ColdWaterLines
+                        ADD CONSTRAINT FK_ColdWaterLines_People_PersonId FOREIGN KEY (PersonId) REFERENCES dbo.People (Id)
+  
+                      ALTER TABLE ReestrBks.dbo.ColdWaterLines
+                        ADD CONSTRAINT FK_ColdWaterLines_Subjects_SubjectId FOREIGN KEY (SubjectId) REFERENCES dbo.Subjects (Id) ON DELETE CASCADE
+                    END"
+                );
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -37,18 +139,18 @@ namespace ReestrBKS.DataAccess
 
             modelBuilder.Entity<AmountType>().HasData(new AmountType[] { amountType1, amountType2,
             amountType3, amountType4, amountType5, amountType6, amountType7 });
-
-         //   modelBuilder.Entity<HotWaterLine>().ToTable("HotWaterLines");
-         //   modelBuilder.Entity<CommonHouseLine>().ToTable("CommonHouseLines");
         }
 
         public void CleanDataBase()
         {
             try
             {
-                this.Database.ExecuteSqlRaw(@"
-                Exec sp_msforeachtable 'ALTER INDEX ALL ON ? REBUILD WITH (FILLFACTOR = 80, SORT_IN_TEMPDB = ON, STATISTICS_NORECOMPUTE = ON);'
-                DBCC SHRINKDATABASE ([ReestrBks], 10);", new object[] { });
+                if (this.Database.IsSqlServer())
+                {
+                    this.Database.ExecuteSqlRaw(@"
+                    Exec sp_msforeachtable 'ALTER INDEX ALL ON ? REBUILD WITH (FILLFACTOR = 80, SORT_IN_TEMPDB = ON, STATISTICS_NORECOMPUTE = ON);'
+                    DBCC SHRINKDATABASE ([ReestrBks], 10);", new object[] { });
+                }
             }
             catch (Exception exc)
             {

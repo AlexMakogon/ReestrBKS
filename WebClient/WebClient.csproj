@@ -15,8 +15,6 @@
   <ItemGroup>
     <None Remove="log.txt" />
     <None Remove="ReestrBKS.db" />
-    <None Remove="Templates\DetailsReport.xlsx" />
-    <None Remove="Templates\GeneralReport.xlsx" />
   </ItemGroup>
 
   <ItemGroup>
@@ -32,6 +30,7 @@
   <ItemGroup>
     <Folder Include="Views\Subject\" />
     <Folder Include="Views\Home\" />
+    <Folder Include="Templates\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties appsettings_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
